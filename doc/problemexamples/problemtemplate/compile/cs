@@ -128,6 +128,7 @@ fi
 cd src
 "\$dn" build $prj
 echo \$? > ../compileit.retcode
+mv bin/Debug/netcoreapp3.0 ../$exe
 exit 0
 EOF
 chmod 755 compileit.sh
