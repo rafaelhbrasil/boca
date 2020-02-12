@@ -1,0 +1,45 @@
+#!/bin/bash
+#
+# This file performs a test of the autojudge system. It can run whatever you feel important to test the autojudge
+# and the script files that are included in the problem package
+
+mkdir -p testdir
+cd testdir
+
+cat > test.cs <<EOF
+using System;
+namespace ConsoleApp1
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var linha = Console.ReadLine();
+            Console.WriteLine("Hello World! " + linha);
+        }
+    }
+}
+EOF
+cat > test.in <<EOF
+inputdata
+EOF
+
+TL=2
+REP=10
+chmod 755 ../../compile/cs
+../../compile/cs test.cs test $TL
+chmod 755 ../../run/cs
+../../run/cs test test.in $TL $REP
+if [ -r stdout0 ]; then
+  output=`cat stdout0`
+  if [ "$output" != "inputdata" ]; then
+    echo "ERROR"
+    exit 1
+  fi
+else
+  echo "ERROR"
+  exit 1
+fi
+echo "TEST PASSED"
+cd ..
+exit 0
