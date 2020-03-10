@@ -15,7 +15,7 @@ namespace ConsoleApp1
         static void Main(string[] args)
         {
             var linha = Console.ReadLine();
-            Console.WriteLine("Hello World! " + linha);
+            Console.WriteLine(linha);
         }
     }
 }
@@ -33,11 +33,11 @@ chmod 755 ../../run/cs
 if [ -r stdout0 ]; then
   output=`cat stdout0`
   if [ "$output" != "inputdata" ]; then
-    echo "ERROR"
+    echo "ERROR - saida diferente da entrada"
     exit 1
   fi
 else
-  echo "ERROR"
+  echo "ERROR - nao houve saida"
   exit 1
 fi
 echo "TEST PASSED"
