@@ -55,6 +55,7 @@ if [ ! -r "$1" ]; then
     exit 44
 fi
 mkdir -p src
+chmod 777 src
 if [ "${name##*.}" == "zip" -a "${name##*.}" == "ZIP" ]; then
 	unzip "$name" -d src
 	name="*.c"
@@ -105,9 +106,9 @@ else
   exe=$2
 fi
 
-prj=ConsoleApp.csproj
-
-cat <<EOF > src/$prj
+prj=ConsoleApp
+csproj=$prj.csproj
+cat <<EOF > src/$csproj
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -125,10 +126,10 @@ if [ ! -x "\$dn" ]; then
     echo "\$dn not found or it's not executable"
     exit 47
 fi
-cd src
-"\$dn" build $prj
+#cd src
+"\$dn" build src/$csproj
 echo \$? > ../compileit.retcode
-mv bin/Debug/netcoreapp3.0/ ../$exe
+mv src/bin/Debug/netcoreapp3.0/$prj $exe
 exit 0
 EOF
 chmod 755 compileit.sh
@@ -162,6 +163,7 @@ EOF
     fi
 else
 	echo "COMPILATION IS NOT BEING CHROOTED -- THIS IS NOT AN IDEAL SETTING"
+echo "$sf -r1 -F1000 -n0 -U$bocau -G$bocag -C. -ostdout0 -estderr0 -d$maxm -m$maxm -f20000 -t$ttime -T$ttime ./compileit.sh"
 	$sf -r1 -F1000 -n0 -U$bocau -G$bocag -C. -ostdout0 -estderr0 -d$maxm -m$maxm -f20000 -t$ttime -T$ttime ./compileit.sh
 	ret=$?
 fi
@@ -171,7 +173,7 @@ fi
 if [ -f "stderr0" ]; then
 	cat "stderr0"
 fi
-rm -rf src/
+#rm -rf src/
 if [ "$ret" != "0" ]; then
 	echo "Compilation Error: $ret"
 	exit $ret
